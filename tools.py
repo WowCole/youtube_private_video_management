@@ -8,6 +8,7 @@ import pandas as pd
 import os
 import undetected_chromedriver as uc
 from datetime import *
+
 def email_modify(self,channel,choosen_option,driver,wait):
     next_page=0
     while next_page == 0:
