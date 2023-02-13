@@ -72,8 +72,17 @@ class App(tk.Frame):
                     driver.quit()
                     return
             
-            
-            channels=setting(location,last_time)
+            try:
+                channels=setting(location,last_time)
+            except:
+                self.inform.config(text="폴더안의 파일이 잘못됨")
+                self.id_txt.config(state='normal')
+                self.pw_txt.config(state='normal')
+                self.btn.config(state="active")
+                self.private.config(state="normal")
+                self.unlisted.config(state="normal")
+                driver.quit()
+                return
             if len(channels) ==0:
                 self.inform.config(text="변경사항 없음")
                 self.id_txt.config(state='normal')
