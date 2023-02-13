@@ -6,23 +6,28 @@ from datetime import *
 import time as tm
 from tools import *
 
-try:
-    f=open("save.txt",'r')
-except Exception as e:
-    f=open("save.txt",'w')
-    f.write("이메일@이메일.com,0000")
-    print("새로 세이브파일 만들어짐")
-else:
-    data=f.read().split(",")
+# try:
+#     f=open("save.txt",'r')
+# except Exception as e:
+#     f=open("save.txt",'w')
+#     f.write("이메일@이메일.com,0000")
+#     print("새로 세이브파일 만들어짐")
 
 class App(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
         self.grid()
-        
+        try:
+            f=open("save.txt",'r')
+        except Exception as e:
+            f=open("save.txt",'w')
+            f.write("이메일@이메일.com,0000")
+            print("새로 세이브파일 만들어짐")
+
         def folder():
             self.dirName=filedialog.askdirectory()
             self.inform.config(text=self.dirName)
+            
         def reset():
             f=open("save.txt",'w')
             f.write("이메일@이메일.com,0000")
@@ -47,16 +52,17 @@ class App(tk.Frame):
                 location=self.dirName
             except Exception as e:
                     self.inform.config(text=f"{e}")
+                    driver.quit()
                     return
             if len(login_id)<5 or len(login_pw)<5 or len(location)<5 or len(choosed_option)<5:
                 self.inform.config(text="제대로 입력이 되지 않았음 재시도 필요")
+                driver.quit()
                 return
             self.id_txt.config(state='readonly')
             self.pw_txt.config(state='readonly')
             self.btn.config(state="disabled")
             self.private.config(state="disabled")
             self.unlisted.config(state="disabled")
-        
             last_time=save_check()
             new_save=login_id+","+str(datetime.timestamp(datetime.fromtimestamp(tm.time(),timezone.utc)))
             try:
