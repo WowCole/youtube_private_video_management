@@ -12,7 +12,15 @@ from datetime import *
 def email_modify(self,channel,choosen_option,driver,wait):
     next_page=0
     while next_page == 0:
-        vids = wait.until(lambda x: x.find_elements(By.XPATH, """//*[@id="row-container"]/div[4]/div/div/tp-yt-iron-icon""")) 
+        checking = wait.until(lambda x: x.find_elements(By.ID,"text-input")[-1])
+        wait.until(EC.element_to_be_clickable(checking))
+        vids = driver.find_elements(By.XPATH, """//*[@id="row-container"]/div[4]/div/div/tp-yt-iron-icon""")
+        # vids = wait.until(lambda x: x.find_elements(By.XPATH, """//*[@id="row-container"]/div[4]/div/div/tp-yt-iron-icon""")) 
+        if len(vids)<1:
+            driver.quit()
+            print("영상이 없습니다.")
+            self.inform.config(text="영상이 없습니다.")
+            return 
         for vid in vids:
             while True:
                 try:
@@ -49,21 +57,27 @@ def save_check():
         f.write("이메일@이메일.com,0000")
         return float(data[1])
 
-def setting(location,last_time):
+def setting(location,last_time,choosed_option,day):
     channels=[]
-    files=os.listdir(location)[1:]
+    files=[i for i in os.listdir(location) if i!='.DS_Store']
     files=[i for i in files if i[0]!="."]
-    for i in files:
-        channel_info=i.split(".")[0].split(" ")[0].split(",")
+    for i in files: 
+        file_title=i.split(".")[0].split(",")
+        channel_day=file_title[-1].split("&")
         file={
             "file_dir":location+"/"+i, 
-            "name":channel_info[0],
-            "tag":channel_info[1],
+            "name":file_title[0],
+            "tag":file_title[1],
             "mtime":os.path.getmtime(location+"/"+i),
             "email":sorted([i.lower() for i in pd.read_csv(location+"/"+i,).이메일])
         }
-        if last_time<file['mtime']:    
-            channels.append(file)
+        if choosed_option.lower()=="private":
+            if last_time<file['mtime']:
+                channels.append(file)
+        elif choosed_option.lower()=="unlisted":
+            if day in channel_day:
+                channels.append(file)
+
     return channels
 
 
