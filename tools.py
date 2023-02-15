@@ -12,10 +12,7 @@ from datetime import *
 def email_modify(self,channel,choosen_option,driver,wait):
     next_page=0
     while next_page == 0:
-        checking = wait.until(lambda x: x.find_elements(By.ID,"text-input")[-1])
-        wait.until(EC.element_to_be_clickable(checking))
-        vids = driver.find_elements(By.XPATH, """//*[@id="row-container"]/div[4]/div/div/tp-yt-iron-icon""")
-        # vids = wait.until(lambda x: x.find_elements(By.XPATH, """//*[@id="row-container"]/div[4]/div/div/tp-yt-iron-icon""")) 
+        vids = wait.until(lambda x: x.find_elements(By.XPATH, """//*[@id="row-container"]/div[4]/div/div/tp-yt-iron-icon""")) 
         if len(vids)<1:
             driver.quit()
             print("영상이 없습니다.")
